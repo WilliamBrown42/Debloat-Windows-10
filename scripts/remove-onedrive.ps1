@@ -17,10 +17,10 @@ if (Test-Path "$env:systemroot\SysWOW64\OneDriveSetup.exe") {
 }
 
 Write-Output "Removing OneDrive leftovers"
-rm -Recurse -Force -ErrorAction SilentlyContinue "$env:localappdata\Microsoft\OneDrive"
-rm -Recurse -Force -ErrorAction SilentlyContinue "$env:programdata\Microsoft OneDrive"
-rm -Recurse -Force -ErrorAction SilentlyContinue "$env:userprofile\OneDrive"
-rm -Recurse -Force -ErrorAction SilentlyContinue "C:\OneDriveTemp"
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:localappdata\Microsoft\OneDrive"
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:programdata\Microsoft OneDrive"
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "$env:userprofile\OneDrive"
+Remove-Item -Recurse -Force -ErrorAction SilentlyContinue "C:\OneDriveTemp"
 
 Write-Output "Disable OneDrive via Group Policies"
 force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\OneDrive"
@@ -41,7 +41,7 @@ reg delete "HKEY_USERS\Default\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v
 reg unload "hku\Default"
 
 Write-Output "Removing startmenu entry"
-rm -Force -ErrorAction SilentlyContinue "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"
+Remove-Item -Force -ErrorAction SilentlyContinue "$env:userprofile\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk"
 
 Write-Output "Restarting explorer"
 start "explorer.exe"
@@ -52,5 +52,5 @@ sleep 10
 Write-Output "Removing additional OneDrive leftovers"
 foreach ($item in (ls "$env:WinDir\WinSxS\*onedrive*")) {
     Takeown-Folder $item.FullName
-    rm -Recurse -Force $item.FullName
+    Remove-Item -Recurse -Force $item.FullName
 }
