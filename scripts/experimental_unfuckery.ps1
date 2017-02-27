@@ -5,10 +5,10 @@
 
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 
-echo "Elevating priviledges for this process"
+Write-Output "Elevating priviledges for this process"
 do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
-echo "Force removing system apps"
+Write-Output "Force removing system apps"
 $needles = @(
     #"Anytime"
     "BioEnrollment"
@@ -27,7 +27,7 @@ $needles = @(
 )
 
 foreach ($needle in $needles) {
-    echo "Trying to remove all packages containing $needle"
+    Write-Output "Trying to remove all packages containing $needle"
 
     $pkgs = (ls "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\Packages" |
         where Name -Like "*$needle*")

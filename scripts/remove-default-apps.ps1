@@ -5,10 +5,10 @@
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
 
-echo "Elevating privileges for this process"
+Write-Output "Elevating privileges for this process"
 do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
-echo "Uninstalling default apps"
+Write-Output "Uninstalling default apps"
 $apps = @(
     # default Windows 10 apps
     "Microsoft.3DBuilder"
@@ -88,7 +88,7 @@ $apps = @(
 )
 
 foreach ($app in $apps) {
-    echo "Trying to remove $app"
+    Write-Output "Trying to remove $app"
 
     Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
 
