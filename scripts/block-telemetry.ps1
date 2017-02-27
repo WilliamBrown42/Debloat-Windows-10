@@ -6,8 +6,9 @@ Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
 
 Write-Output "Disabling telemetry via Group Policies"
 force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection"
-sp "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "AllowTelemetry" 0
+Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "AllowTelemetry" 0
 
+# Implement PSD file.
 Write-Output "Adding telemetry domains to hosts file"
 $hosts_file = "$env:systemroot\System32\drivers\etc\hosts"
 $domains = @(
@@ -60,7 +61,7 @@ $domains = @(
     "db3aqu.atdmt.com"
     "df.telemetry.microsoft.com"
     "diagnostics.support.microsoft.com"
-    "e2835.dspb.akamaiedge.net"
+    "e2835.dSet-ItemPropertyb.akamaiedge.net"
     "e7341.g.akamaiedge.net"
     "e7502.ce.akamaiedge.net"
     "e8218.ce.akamaiedge.net"
@@ -73,7 +74,7 @@ $domains = @(
     "g.msn.com"
     "h1.msn.com"
     "h2.msn.com"
-    "hostedocsp.globalsign.com"
+    "hostedocSet-ItemProperty.globalsign.com"
     "i1.services.social.microsoft.com"
     "i1.services.social.microsoft.com.nsatc.net"
     "ipv6.msftncsi.com"
@@ -169,6 +170,6 @@ $ips = @(
     "65.52.108.33"
     "65.55.108.23"
 )
-Remove-NetFirewallRule -DisplayName "Block Telemetry IPs" -ErrorAction SilentlyContinue
-New-NetFirewallRule -DisplayName "Block Telemetry IPs" -Direction Outbound `
+Remove-NetFirewallRule -DiSet-ItemPropertylayName "Block Telemetry IPs" -ErrorAction SilentlyContinue
+New-NetFirewallRule -DiSet-ItemPropertylayName "Block Telemetry IPs" -Direction Outbound `
     -Action Block -RemoteAddress ([string[]]$ips)

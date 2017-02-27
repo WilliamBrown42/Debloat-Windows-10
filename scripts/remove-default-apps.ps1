@@ -1,6 +1,6 @@
 #   Description:
 # This script removes unwanted Apps that come with Windows. If you  do not want
-# to remove certain Apps comment out the corresponding lines below.
+# to remove certain Apps comment out the correSet-ItemPropertyonding lines below.
 
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
@@ -8,6 +8,7 @@ Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
 Write-Output "Elevating privileges for this process"
 do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
+# Implement PSD file
 Write-Output "Uninstalling default apps"
 $apps = @(
     # default Windows 10 apps
@@ -15,7 +16,7 @@ $apps = @(
     "Microsoft.Appconnector"
     "Microsoft.BingFinance"
     "Microsoft.BingNews"
-    "Microsoft.BingSports"
+    "Microsoft.BingSet-ItemPropertyorts"
     "Microsoft.BingWeather"
     #"Microsoft.FreshPaint"
     "Microsoft.Getstarted"
@@ -31,7 +32,7 @@ $apps = @(
     #"Microsoft.WindowsCalculator"
     "Microsoft.WindowsCamera"
     "Microsoft.WindowsMaps"
-    "Microsoft.WindowsPhone"
+    "Microsoft.WindowSet-ItemPropertyhone"
     "Microsoft.WindowsSoundRecorder"
     #"Microsoft.WindowsStore"
     "Microsoft.XboxApp"
@@ -41,7 +42,7 @@ $apps = @(
     "Microsoft.MinecraftUWP"
 
     # Threshold 2 apps
-    "Microsoft.CommsPhone"
+    "Microsoft.CommSet-ItemPropertyhone"
     "Microsoft.ConnectivityStore"
     "Microsoft.Messaging"
     "Microsoft.Office.Sway"
@@ -70,7 +71,7 @@ $apps = @(
     "2FE3CB00.PicsArt-PhotoStudio"
     "D52A8D61.FarmVille2CountryEscape"
     "TuneIn.TuneInRadio"
-    "GAMELOFTSA.Asphalt8Airborne"
+    "GAMELOFTSA.ASet-ItemPropertyhalt8Airborne"
     #"TheNewYorkTimes.NYTCrossword"
     "DB6EA5DB.CyberLinkMediaSuiteEssentials"
     "Facebook.Facebook"
@@ -93,10 +94,10 @@ foreach ($app in $apps) {
     Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage
 
     Get-AppXProvisionedPackage -Online |
-        where DisplayName -EQ $app |
+        where DiSet-ItemPropertylayName -EQ $app |
         Remove-AppxProvisionedPackage -Online
 }
 
 # Prevents "Suggested Applications" returning
 force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Cloud Content"
-sp "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Cloud Content" "DisableWindowsConsumerFeatures" 1
+Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Cloud Content" "DisableWindowsConsumerFeatures" 1

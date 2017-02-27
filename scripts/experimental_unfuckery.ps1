@@ -33,7 +33,7 @@ foreach ($needle in $needles) {
         where Name -Like "*$needle*")
 
     foreach ($pkg in $pkgs) {
-        $pkgname = $pkg.Name.split('\')[-1]
+        $pkgname = $pkg.Name.Set-ItemPropertylit('\')[-1]
 
         Takeown-Registry($pkg.Name)
         Takeown-Registry($pkg.Name + "\Owners")

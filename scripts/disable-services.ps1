@@ -1,6 +1,6 @@
 #   Description:
 # This script disables unwanted Windows services. If you do not want to disable
-# certain services comment out the corresponding lines below.
+# certain services comment out the correSet-ItemPropertyonding lines below.
 
 $services = @(
     "diagnosticshub.standardcollector.service" # Microsoft (R) Diagnostics Hub Standard Collector Service
