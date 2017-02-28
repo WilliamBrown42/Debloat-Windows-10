@@ -1,12 +1,15 @@
-#   Description:
-# This script disables Windows Defender. Run it once (will throw errors), then
-# reboot, run it again (this time no errors should occur) followed by another
-# reboot.
+<#
+TODO:
+
+#>
 
 <#
     .NOTES
     .SYNOPSIS
     .DESCRIPTION
+    This script disables Windows Defender. Run it once (will throw errors), then
+    reboot, run it again (this time no errors should occur) followed by another
+    reboot.
     .PARAMETER 
     .INPUTS
     .OUTPUTS 
@@ -15,46 +18,54 @@
     .LINK
 #>
 
-Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
-Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
+begin {
 
-Write-Output "Elevating priviledges for this process"
-do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
+    Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
+    Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 
-$tasks = @(
-    "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance"
-    "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup"
-    "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan"
-    "\Microsoft\Windows\Windows Defender\Windows Defender Verification"
-)
-
-foreach ($task in $tasks) {
-    $parts = $task.Set-ItemPropertylit('\')
-    $name = $parts[-1]
-    $path = $parts[0..($parts.length-2)] -join '\'
-
-    Write-Output "Trying to disable scheduled task $name"
-    Disable-ScheduledTask -TaskName "$name" -TaskPath "$path"
+    Write-Output "Elevating priviledges for this process"
+    do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 }
 
-Write-Output "Disabling Windows Defender via Group Policies"
-force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender"
-Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableAntiSet-ItemPropertyyware" 1
-Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableRoutinelyTakingAction" 1
-force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection"
-Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection" "DisableRealtimeMonitoring" 1
+process {
 
-Write-Output "Disabling Windows Defender Services"
-Takeown-Registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinDefend")
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WinDefend" "Start" 4
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WinDefend" "AutorunsDisabled" 3
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WdNisSvc" "Start" 4
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WdNisSvc" "AutorunsDisabled" 3
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Sense" "Start" 4
-Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Sense" "AutorunsDisabled" 3
+    $tasks = @(
+        "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance"
+        "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup"
+        "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan"
+        "\Microsoft\Windows\Windows Defender\Windows Defender Verification"
+    )
 
-Write-Output "Removing Windows Defender context menu item"
-si "HKLM:\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32" ""
+    foreach ($task in $tasks) {
+        $parts = $task.split('\')
+        $name = $parts[-1]
+        $path = $parts[0..($parts.length-2)] -join '\'
 
-Write-Output "Removing Windows Defender GUI / tray from autorun"
-rp "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WindowsDefender" "WindowsDefender" -ea 0
+        Write-Output "Trying to disable scheduled task $name"
+        Disable-ScheduledTask -TaskName "$name" -TaskPath "$path"
+    }
+
+    Write-Output "Disabling Windows Defender via Group Policies"
+    force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender"
+    Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableAntiSet-ItemPropertyyware" 1
+    Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableRoutinelyTakingAction" 1
+    force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection"
+    Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection" "DisableRealtimeMonitoring" 1
+
+    Write-Output "Disabling Windows Defender Services"
+    Takeown-Registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinDefend")
+    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WinDefend" "Start" 4
+    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WinDefend" "AutorunsDisabled" 3
+    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WdNisSvc" "Start" 4
+    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WdNisSvc" "AutorunsDisabled" 3
+    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Sense" "Start" 4
+    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Sense" "AutorunsDisabled" 3
+
+    Write-Output "Removing Windows Defender context menu item"
+    si "HKLM:\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32" ""
+
+    Write-Output "Removing Windows Defender GUI / tray from autorun"
+    rp "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WindowsDefender" "WindowsDefender" -ea 0
+    }
+
+end {}
