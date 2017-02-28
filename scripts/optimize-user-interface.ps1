@@ -1,4 +1,9 @@
 <#
+TODO:
+
+#>
+
+<#
     .NOTES
     .SYNOPSIS
     .DESCRIPTION
@@ -19,11 +24,17 @@ begin {
 
     Write-Output "Elevating priviledges for this process"
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
+
+    $PercentComplete = 0
 }
 
 process {
 
-    Write-Output "Apply MarkC's mouse acceleration fix" # 1
+    $PercentComplete = ($PercentComplete + 12.5)
+    Write-Progress -Activity "Applying MarkC's mouse acceleration fix" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-ItemProperty "HKCU:\Control Panel\Mouse" "MouseSensitivity" "10"
     Set-ItemProperty "HKCU:\Control Panel\Mouse" "MouseSet-ItemPropertyeed" "0"
     Set-ItemProperty "HKCU:\Control Panel\Mouse" "MouseThreshold1" "0"
@@ -37,32 +48,60 @@ process {
     0x00, 0x00, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA8, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00))
 
-    Write-Output "Disable mouse pointer hiding" # 2
+    $PercentComplete = ($PercentComplete + 12.5)
+    Write-Progress -Activity "Disable mouse pointer hiding" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-ItemProperty "HKCU:\Control Panel\Desktop" "UserPreferencesMask" ([byte[]](0x9e,
     0x1e, 0x06, 0x80, 0x12, 0x00, 0x00, 0x00))
 
-    Write-Output "Disable Game DVR and Game Bar" # 3
+    $PercentComplete = ($PercentComplete + 12.5)
+    Write-Progress -Activity "Disabling Game DVR and Game Bar" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR"
     Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR" "AllowgameDVR" 0
 
-    Write-Output "Disable easy access keyboard stuff" # 4
+    $PercentComplete = ($PercentComplete + 12.5)
+    Write-Progress -Activity "Disabling easy access keyboard stuff" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-ItemProperty "HKCU:\Control Panel\Accessibility\StickyKeys" "Flags" "506"
     Set-ItemProperty "HKCU:\Control Panel\Accessibility\Keyboard ReSet-ItemPropertyonse" "Flags" "122"
     Set-ItemProperty "HKCU:\Control Panel\Accessibility\ToggleKeys" "Flags" "58"
 
-    Write-Output "Restoring old volume slider" # 5
+    $PercentComplete = ($PercentComplete + 12.5)
+    Write-Progress -Activity "Restoring old volume slider" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     force-mkdir "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC"
     Set-ItemProperty "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" "EnableMtcUvc" 0
 
-    Write-Output "Setting folder view options" # 6
+    $PercentComplete = ($PercentComplete + 12.5)
+    Write-Progress -Activity "Setting folder view options" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "Hidden" 1
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "HideFileExt" 0
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "HideDrivesWithNoMedia" 0
 
-    Write-Output "Setting default explorer view to This PC" # 7
+    $PercentComplete = ($PercentComplete + 12.5)
+    Write-Progress -Activity "Setting default explorer view to This PC" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "LaunchTo" 1
 
-    Write-Output "Removing user folders under This PC" # 8
+    $PercentComplete = ($PercentComplete + 12.5)
+    Write-Progress -Activity "Removing user folders under This PC" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     # Remove Desktop from This PC
     Remove-Item "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\Namespace\{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}"
     Remove-Item "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\Namespace\{B4BFCC3A-DB2C-424C-B029-7FE99A87C641}"
@@ -92,10 +131,10 @@ process {
     Remove-Item "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\Namespace\{A0953C92-50DC-43bf-BE83-3742FED03C9C}"
     Remove-Item "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Explorer\MyComputer\Namespace\{f86fa3ab-70d2-4fc7-9c99-fcbf05467f3a}"
 
+    # What do I want to do with this one?
     #Write-Output "Disabling tile push notification"
     #force-mkdir "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications"
     #Set-ItemProperty "HKCU:\SOFTWARE\Policies\Microsoft\Windows\CurrentVersion\PushNotifications" "NoTileApplicationNotification" 1
-
 }
 
 end {}

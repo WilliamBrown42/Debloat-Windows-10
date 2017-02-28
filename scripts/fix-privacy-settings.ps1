@@ -1,3 +1,8 @@
+<# 
+TODO:
+Write-Progress 1/12
+#>
+
 <#
     .NOTES
     .SYNOPSIS
@@ -21,6 +26,18 @@ begin{
     Write-Output "Elevating priviledges for this process"
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
+     $groups = @(
+        "Accessibility"
+        "AppSync"
+        "BrowserSettings"
+        "Credentials"
+        "DesktopTheme"
+        "Language"
+        "PackageState"
+        "Personalization"
+        "StartLayout"
+        "Windows"
+    )
 }
 
 process{
@@ -42,6 +59,7 @@ process{
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" "BackupPolicy" 0x3c
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" "DeviceMetadataUploaded" 0
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" "PriorLogons" 1
+    <#
     $groups = @(
         "Accessibility"
         "AppSync"
@@ -54,6 +72,7 @@ process{
         "StartLayout"
         "Windows"
     )
+    #>
     foreach ($group in $groups) {
         force-mkdir "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\$group"
         Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\$group" "Enabled" 0
@@ -90,14 +109,14 @@ process{
     Write-Output "Denying device access" # 9
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" "Type" "LooselyCoupled"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" "Value" "Deny"
-    Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" "InitialAppValue" "UnSet-ItemPropertyecified"
+    Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" "InitialAppValue" "Unspecified"
     foreach ($key in (ls "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global")) {
         if ($key.PSChildName -EQ "LooselyCoupled") {
             continue
         }
         Set-ItemProperty ("HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\" + $key.PSChildName) "Type" "InterfaceClass"
         Set-ItemProperty ("HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\" + $key.PSChildName) "Value" "Deny"
-        Set-ItemProperty ("HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\" + $key.PSChildName) "InitialAppValue" "UnSet-ItemPropertyecified"
+        Set-ItemProperty ("HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\" + $key.PSChildName) "InitialAppValue" "Unspecified"
     }
 
     Write-Output "Disable location sensor" # 10
@@ -105,9 +124,9 @@ process{
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\PeRemove-Itemissions\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" "SensorPeRemove-ItemissionState" 0
 
     Write-Output "Disable submission of Windows Defender findings (w/ elevated privileges)" # 11
-    Takeown-Registry("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\Set-ItemPropertyynet")
-    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows Defender\Set-ItemPropertyynet" "Set-ItemPropertyyNetReporting" 0       # write-protected even after takeown ?!
-    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows Defender\Set-ItemPropertyynet" "SubmitSamplesConsent" 0
+    Takeown-Registry("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\spynet")
+    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows Defender\spynet" "spyNetReporting" 0       # write-protected even after takeown ?!
+    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows Defender\spynet" "SubmitSamplesConsent" 0
 
     Write-Output "Do not share wifi networks" # 12
     $user = New-Object System.Security.Principal.NTAccount($env:UserName)
