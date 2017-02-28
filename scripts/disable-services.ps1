@@ -41,6 +41,12 @@ $services = @(
 )
 
 foreach ($service in $services) {
-    Write-Output "Trying to disable $service"
+        # Look up how this worked again, forgotten exactly how I did this should be something 
+        # like finding a percent of total length of $varible or something like that
+        $PercentComplete = ((($increment++)/$services.length)*100)
+        Write-Progress -Activity "Trying to disable $service" `
+                       -PercentComplete  $PercentComplete `
+                       -CurrentOperation "$PercentComplete% Complete" `
+                       -Status "Please Wait..."
     Get-Service -Name $service | Set-Service -StartupType Disabled
 }
