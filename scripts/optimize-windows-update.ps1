@@ -2,6 +2,19 @@
 # This script optimizes Windows updates by disabling automatic download and
 # seeding updates to other computers.
 #
+
+<#
+    .NOTES
+    .SYNOPSIS
+    .DESCRIPTION
+    .PARAMETER 
+    .INPUTS
+    .OUTPUTS 
+    .EXAMPLE
+    .EXAMPLE
+    .LINK
+#>
+
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
 
 Write-Output "Disable automatic download and installation of Windows updates"

@@ -2,6 +2,18 @@
 # This script blocks telemetry related domains via the hosts file and related
 # IPs via Windows Firewall.
 
+<#
+    .NOTES
+    .SYNOPSIS
+    .DESCRIPTION
+    .PARAMETER 
+    .INPUTS
+    .OUTPUTS 
+    .EXAMPLE
+    .EXAMPLE
+    .LINK
+#>
+
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
 
 Write-Output "Disabling telemetry via Group Policies"

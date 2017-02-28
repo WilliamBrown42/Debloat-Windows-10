@@ -3,6 +3,18 @@
 # disable some accessibility features regarding keyboard input.  Additional
 # some UI elements will be changed.
 
+<#
+    .NOTES
+    .SYNOPSIS
+    .DESCRIPTION
+    .PARAMETER 
+    .INPUTS
+    .OUTPUTS 
+    .EXAMPLE
+    .EXAMPLE
+    .LINK
+#>
+
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 

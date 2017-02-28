@@ -3,6 +3,19 @@
 # is work in progress!
 # 10/100 write-progress
 
+<#
+    .NOTES
+    .SYNOPSIS
+    .DESCRIPTION
+    .PARAMETER 
+    .INPUTS
+    .OUTPUTS 
+    .EXAMPLE
+    .EXAMPLE
+    .LINK
+#>
+
+
 begin{
 
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
@@ -108,4 +121,5 @@ Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\features" "
 Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\features" "WiFiSenseOpen" 0
 }
 
-end {}
+end {
+}

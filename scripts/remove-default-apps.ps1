@@ -2,6 +2,18 @@
 # This script removes unwanted Apps that come with Windows. If you  do not want
 # to remove certain Apps comment out the correSet-ItemPropertyonding lines below.
 
+<#
+    .NOTES
+    .SYNOPSIS
+    .DESCRIPTION
+    .PARAMETER 
+    .INPUTS
+    .OUTPUTS 
+    .EXAMPLE
+    .EXAMPLE
+    .LINK
+#>
+
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
 
