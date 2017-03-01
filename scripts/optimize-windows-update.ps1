@@ -15,8 +15,13 @@
     .LINK
 #>
 
-Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
+begin {
 
+    Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
+
+}
+
+process {
 Write-Output "Disable automatic download and installation of Windows updates"
 force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\WindowsUpdate\AU"
 Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\WindowsUpdate\AU" "NoAutoUpdate" 0
@@ -36,3 +41,7 @@ takeown /F "$env:WinDIR\System32\MusNotification.exe"
 icacls "$env:WinDIR\System32\MusNotification.exe" /deny "Everyone:(X)"
 takeown /F "$env:WinDIR\System32\MusNotificationUx.exe"
 icacls "$env:WinDIR\System32\MusNotificationUx.exe" /deny "Everyone:(X)"
+
+}
+
+end {}
