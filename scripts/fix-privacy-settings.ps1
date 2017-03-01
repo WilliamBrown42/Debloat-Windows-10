@@ -20,13 +20,15 @@ Error action?
 
 
 begin{
-
+    
+    # Stuff
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 
     Write-Output "Elevating priviledges for this process"
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
+    # Stuff
      $groups = @(
         "Accessibility"
         "AppSync"
@@ -39,14 +41,27 @@ begin{
         "StartLayout"
         "Windows"
     )
+
+    # Stuff
+    $PercentComplete = 0
+    $PercentIncrement = 0
 }
 
 process{
 
-    Write-Output "Defuse Windows search settings" # 1
+    # Look at the wording of this
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Defuse Windows search settings" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-WindowsSearchSetting -EnableWebResultsSetting $false
 
-    Write-Output "Set general privacy options" # 2
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Setting general privacy options" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-ItemProperty "HKCU:\Control Panel\International\User Profile" "HttpAcceptLanguageOptOut" 1
     force-mkdir "HKCU:\Printers\Defaults"
     Set-ItemProperty "HKCU:\Printers\Defaults" "NetID" "{00000000-0000-0000-0000-000000000000}"
@@ -56,43 +71,53 @@ process{
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo" "Enabled" 0
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AppHost" "EnableWebContentEvaluation" 0
 
-    Write-Output "Disable synchronisation of settings" # 3
+    # look at wording here too.
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Disable synchronisation of settings" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" "BackupPolicy" 0x3c
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" "DeviceMetadataUploaded" 0
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync" "PriorLogons" 1
     <#
-    $groups = @(
-        "Accessibility"
-        "AppSync"
-        "BrowserSettings"
-        "Credentials"
-        "DesktopTheme"
-        "Language"
-        "PackageState"
-        "Personalization"
-        "StartLayout"
-        "Windows"
-    )
+    Groups here previously
     #>
     foreach ($group in $groups) {
         force-mkdir "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\$group"
         Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\SettingSync\Groups\$group" "Enabled" 0
     }
 
-    Write-Output "Set privacy policy accepted state to 0" # 4
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Set privacy policy accepted state to 0" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     force-mkdir "HKCU:\SOFTWARE\Microsoft\Personalization\Settings"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Personalization\Settings" "AcceptedPrivacyPolicy" 0
 
-    Write-Output "Do not scan contact infoRemove-Itemations" # 5
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Do not scan contact infoRemove-Itemations" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     force-mkdir "HKCU:\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\InputPersonalization\TrainedDataStore" "HarvestContacts" 0
 
-    Write-Output "Inking and typing settings" # 6
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Inking and typing settings" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     force-mkdir "HKCU:\SOFTWARE\Microsoft\InputPersonalization"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\InputPersonalization" "RestrictImplicitInkCollection" 1
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\InputPersonalization" "RestrictImplicitTextCollection" 1
 
-    Write-Output "Microsoft Edge settings" # 7
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Microsoft Edge settings" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     force-mkdir "HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main"
     Set-ItemProperty "HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\Main" "DoNotTrack" 1
     force-mkdir "HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\User\Default\SearchScopes"
@@ -102,12 +127,21 @@ process{
     force-mkdir "HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\PhishingFilter"
     Set-ItemProperty "HKCU:\SOFTWARE\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppContainer\Storage\microsoft.microsoftedge_8wekyb3d8bbwe\MicrosoftEdge\PhishingFilter" "EnabledV9" 0
 
-    Write-Output "Disable background access of default apps" # 8
+    # Wording
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Disable background access of default apps" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     foreach ($key in (ls "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications")) {
         Set-ItemProperty ("HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications\" + $key.PSChildName) "Disabled" 1
     }
 
-    Write-Output "Denying device access" # 9
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Denying device access" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" "Type" "LooselyCoupled"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" "Value" "Deny"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\LooselyCoupled" "InitialAppValue" "Unspecified"
@@ -120,16 +154,28 @@ process{
         Set-ItemProperty ("HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\DeviceAccess\Global\" + $key.PSChildName) "InitialAppValue" "Unspecified"
     }
 
-    Write-Output "Disable location sensor" # 10
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Disable location sensor" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     force-mkdir "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\PeRemove-Itemissions\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\PeRemove-Itemissions\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" "SensorPeRemove-ItemissionState" 0
 
-    Write-Output "Disable submission of Windows Defender findings (w/ elevated privileges)" # 11
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Disable submission of Windows Defender findings (w/ elevated privileges)" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Takeown-Registry("HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Defender\spynet")
     Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows Defender\spynet" "spyNetReporting" 0       # write-protected even after takeown ?!
     Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows Defender\spynet" "SubmitSamplesConsent" 0
 
-    Write-Output "Do not share wifi networks" # 12
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Do not share wifi networks" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     $user = New-Object System.Security.Principal.NTAccount($env:UserName)
     $sid = $user.Translate([System.Security.Principal.SecurityIdentifier]).value
     force-mkdir ("HKLM:\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\features\" + $sid)
@@ -140,4 +186,3 @@ process{
 
 end {
 }
-`

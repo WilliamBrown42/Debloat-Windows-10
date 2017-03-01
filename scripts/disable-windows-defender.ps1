@@ -32,12 +32,16 @@ begin {
         "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan"
         "\Microsoft\Windows\Windows Defender\Windows Defender Verification"
     )
+
+    # Setting Varibles for Write-Progress
+    $PercentComplete = 0
+    $PercentIncrement = 0
 }
 
 process {
 
     
-
+    # Section explanation + write-progress
     foreach ($task in $tasks) {
         $parts = $task.split('\')
         $name = $parts[-1]
@@ -47,14 +51,24 @@ process {
         Disable-ScheduledTask -TaskName "$name" -TaskPath "$path"
     }
 
-    Write-Output "Disabling Windows Defender via Group Policies"
+    # Section explanation
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Disabling Windows Defender via Group Policies" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender"
     Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableAntispyware" 1
     Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableRoutinelyTakingAction" 1
     force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection"
     Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection" "DisableRealtimeMonitoring" 1
 
-    Write-Output "Disabling Windows Defender Services"
+    # Section explanation
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Disabling Windows Defender Services" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Takeown-Registry("HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinDefend")
     Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WinDefend" "Start" 4
     Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\WinDefend" "AutorunsDisabled" 3
@@ -63,10 +77,19 @@ process {
     Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Sense" "Start" 4
     Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Sense" "AutorunsDisabled" 3
 
-    Write-Output "Removing Windows Defender context menu item"
+    # Section explanation
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Removing Windows Defender context menu item" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Set-Item "HKLM:\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32" ""
 
-    Write-Output "Removing Windows Defender GUI / tray from autorun"
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
+    Write-Progress -Activity "Removing Windows Defender GUI / tray from autorun" `
+                   -PercentComplete  $PercentComplete `
+                   -CurrentOperation "$PercentComplete% Complete" `
+                   -Status "Please Wait..."
     Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WindowsDefender" "WindowsDefender" -ea 0
     }
 
