@@ -25,6 +25,7 @@ begin{
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 
+    # Stuff
     Write-Output "Elevating priviledges for this process"
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
@@ -42,7 +43,7 @@ begin{
         "Windows"
     )
 
-    # Stuff
+    # Setting Varibles for Write-Progress
     $PercentComplete = 0
     $PercentIncrement = 0
 }
@@ -64,7 +65,7 @@ process{
                    -Status "Please Wait..."
     Set-ItemProperty "HKCU:\Control Panel\International\User Profile" "HttpAcceptLanguageOptOut" 1
     force-mkdir "HKCU:\Printers\Defaults"
-    Set-ItemProperty "HKCU:\Printers\Defaults" "NetID" "{00000000-0000-0000-0000-000000000000}"
+    Set-ItemProperty "HKCU:\Printers\Defaults" "NetID" "{00000000-0000-0000-0000-000000000000}" 
     force-mkdir "HKCU:\SOFTWARE\Microsoft\Input\TIPC"
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Input\TIPC" "Enabled" 0
     force-mkdir "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\AdvertisingInfo"

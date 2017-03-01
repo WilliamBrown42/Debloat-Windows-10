@@ -1,11 +1,13 @@
-#   Description:
-# This script disables unwanted Windows services. If you do not want to disable
-# certain services comment out the correSet-ItemPropertyonding lines below.
+<#
+READFORMERGESTATUS: NO
+#>
 
 <#
     .NOTES
     .SYNOPSIS
     .DESCRIPTION
+    This script disables unwanted Windows services. If you do not want to disable
+    certain services comment out the correSet-ItemPropertyonding lines below.
     .PARAMETER 
     .INPUTS
     .OUTPUTS 
@@ -13,6 +15,8 @@
     .EXAMPLE
     .LINK
 #>
+
+begin {
 
 $services = @(
     "diagnosticshub.standardcollector.service" # Microsoft (R) Diagnostics Hub Standard Collector Service
@@ -40,7 +44,11 @@ $services = @(
     #"WdNisSvc"
 )
 
-foreach ($service in $services) {
+}
+
+process {
+
+    foreach ($service in $services) {
         # Look up how this worked again, forgotten exactly how I did this should be something 
         # like finding a percent of total length of $varible or something like that
         $PercentComplete = ((($increment++)/$services.length)*100)
@@ -48,5 +56,10 @@ foreach ($service in $services) {
                        -PercentComplete  $PercentComplete `
                        -CurrentOperation "$PercentComplete% Complete" `
                        -Status "Please Wait..."
-    Get-Service -Name $service | Set-Service -StartupType Disabled
+        Get-Service -Name $service | Set-Service -StartupType Disabled
+    }
+
+}
+
+end {
 }

@@ -19,18 +19,22 @@ TODO:
 #>
 
 begin {
+    
+    # Stuff
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 
+    # Stuff
     Write-Output "Elevating priviledges for this process"
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
     $PercentComplete = 0
+    $PercentIncrement = 0
 }
 
 process {
 
-    $PercentComplete = ($PercentComplete + 12.5)
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
     Write-Progress -Activity "Applying MarkC's mouse acceleration fix" `
                    -PercentComplete  $PercentComplete `
                    -CurrentOperation "$PercentComplete% Complete" `
@@ -48,7 +52,7 @@ process {
     0x00, 0x00, 0x70, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xA8, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00))
 
-    $PercentComplete = ($PercentComplete + 12.5)
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
     Write-Progress -Activity "Disable mouse pointer hiding" `
                    -PercentComplete  $PercentComplete `
                    -CurrentOperation "$PercentComplete% Complete" `
@@ -56,7 +60,7 @@ process {
     Set-ItemProperty "HKCU:\Control Panel\Desktop" "UserPreferencesMask" ([byte[]](0x9e,
     0x1e, 0x06, 0x80, 0x12, 0x00, 0x00, 0x00))
 
-    $PercentComplete = ($PercentComplete + 12.5)
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
     Write-Progress -Activity "Disabling Game DVR and Game Bar" `
                    -PercentComplete  $PercentComplete `
                    -CurrentOperation "$PercentComplete% Complete" `
@@ -64,7 +68,7 @@ process {
     force-mkdir "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR"
     Set-ItemProperty "HKLM:\SOFTWARE\Policies\Microsoft\Windows\GameDVR" "AllowgameDVR" 0
 
-    $PercentComplete = ($PercentComplete + 12.5)
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
     Write-Progress -Activity "Disabling easy access keyboard stuff" `
                    -PercentComplete  $PercentComplete `
                    -CurrentOperation "$PercentComplete% Complete" `
@@ -73,7 +77,7 @@ process {
     Set-ItemProperty "HKCU:\Control Panel\Accessibility\Keyboard ReSet-ItemPropertyonse" "Flags" "122"
     Set-ItemProperty "HKCU:\Control Panel\Accessibility\ToggleKeys" "Flags" "58"
 
-    $PercentComplete = ($PercentComplete + 12.5)
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
     Write-Progress -Activity "Restoring old volume slider" `
                    -PercentComplete  $PercentComplete `
                    -CurrentOperation "$PercentComplete% Complete" `
@@ -81,7 +85,7 @@ process {
     force-mkdir "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC"
     Set-ItemProperty "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\MTCUVC" "EnableMtcUvc" 0
 
-    $PercentComplete = ($PercentComplete + 12.5)
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
     Write-Progress -Activity "Setting folder view options" `
                    -PercentComplete  $PercentComplete `
                    -CurrentOperation "$PercentComplete% Complete" `
@@ -90,14 +94,14 @@ process {
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "HideFileExt" 0
     Set-ItemProperty "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "HideDrivesWithNoMedia" 0
 
-    $PercentComplete = ($PercentComplete + 12.5)
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
     Write-Progress -Activity "Setting default explorer view to This PC" `
                    -PercentComplete  $PercentComplete `
                    -CurrentOperation "$PercentComplete% Complete" `
                    -Status "Please Wait..."
     Set-ItemProperty "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" "LaunchTo" 1
 
-    $PercentComplete = ($PercentComplete + 12.5)
+    $PercentComplete = ($PercentComplete + $PercentIncrement)
     Write-Progress -Activity "Removing user folders under This PC" `
                    -PercentComplete  $PercentComplete `
                    -CurrentOperation "$PercentComplete% Complete" `

@@ -19,13 +19,16 @@ Add in Write-Progress
 #>
 
 begin {
-
+    
+    # Stuff
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\take-own.psm1
 
+    # Stuff
     Write-Output "Elevating priviledges for this process"
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
 
+    # Stuff
     $tasks = @(
         "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance"
         "\Microsoft\Windows\Windows Defender\Windows Defender Cleanup"
@@ -40,7 +43,6 @@ begin {
 
 process {
 
-    
     # Section explanation + write-progress
     foreach ($task in $tasks) {
         $parts = $task.split('\')
@@ -91,6 +93,6 @@ process {
                    -CurrentOperation "$PercentComplete% Complete" `
                    -Status "Please Wait..."
     Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WindowsDefender" "WindowsDefender" -ea 0
-    }
+}
 
 end {}

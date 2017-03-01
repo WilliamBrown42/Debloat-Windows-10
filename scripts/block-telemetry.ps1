@@ -1,6 +1,9 @@
 <#
 TODO:`
 Test declarations included in begin -- that being testing the host file.
+Add in Start-Sleep
+
+READFORMERGESTATUS: NO
 #>
 
 <#
@@ -22,7 +25,7 @@ begin {
     # Module Import #
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
     
-    # Setting domans for ()
+    # Setting domains to be added to the host file to be blocked. 
     $Domains = @(
         "a-0001.a-msedge.net"
         "a-0002.a-msedge.net"
@@ -163,7 +166,7 @@ begin {
         "s.gateway.messenger.live.com"
     )
 
-    # Setting IPs for ()
+    # Setting IPs to be added to the "Block Telemetry IPs" firewall rule
     $IPs = @(
         "134.170.30.202"
         "137.116.81.24"
@@ -180,6 +183,7 @@ begin {
     # Setting Varibles for Write-Progress
     $PercentComplete = 0
     $PercentIncrement = 33
+
 }
 
 process {
@@ -205,7 +209,7 @@ process {
     Domains went here previously
     #>
 
-    # Look at this closer, this may break with fixes.
+    # Look at this closer, may break with Write-Output
     Write-Output "" | Out-File -Encoding ASCII -Append $hosts_file
     foreach ($domain in $domains) {
         if (-Not (Select-String -Path $hosts_file -Pattern $domain)) {
@@ -224,7 +228,7 @@ process {
     #>
     Remove-NetFirewallRule -DisplayName "Block Telemetry IPs" -ErrorAction SilentlyContinue
     New-NetFirewallRule -DisplayName "Block Telemetry IPs" -Direction Outbound `
-                        -Action Block -RemoteAddress ([string[]]$ips)
+                        -Action Block -RemoteAddress ([string[]]$IPs)
 
 }
 

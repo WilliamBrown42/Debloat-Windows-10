@@ -17,11 +17,14 @@
 
 begin {
 
+    # Stuff
     Import-Module -DisableNameChecking $PSScriptRoot\..\lib\force-mkdir.psm1
 
 }
 
 process {
+
+# Add in Write-Progress
 Write-Output "Disable automatic download and installation of Windows updates"
 force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\WindowsUpdate\AU"
 Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows\WindowsUpdate\AU" "NoAutoUpdate" 0
