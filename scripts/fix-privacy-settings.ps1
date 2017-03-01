@@ -1,6 +1,7 @@
 <# 
 TODO:
-Write-Progress 1/12
+Write-Progress 1/12'
+Error action?
 #>
 
 <#
@@ -139,3 +140,4 @@ process{
 
 end {
 }
+`

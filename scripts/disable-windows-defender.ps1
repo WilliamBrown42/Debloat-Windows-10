@@ -1,6 +1,6 @@
 <#
 TODO:
-
+Add in Write-Progress
 #>
 
 <#
@@ -25,9 +25,6 @@ begin {
 
     Write-Output "Elevating priviledges for this process"
     do {} until (Elevate-Privileges SeTakeOwnershipPrivilege)
-}
-
-process {
 
     $tasks = @(
         "\Microsoft\Windows\Windows Defender\Windows Defender Cache Maintenance"
@@ -35,6 +32,11 @@ process {
         "\Microsoft\Windows\Windows Defender\Windows Defender Scheduled Scan"
         "\Microsoft\Windows\Windows Defender\Windows Defender Verification"
     )
+}
+
+process {
+
+    
 
     foreach ($task in $tasks) {
         $parts = $task.split('\')
@@ -47,7 +49,7 @@ process {
 
     Write-Output "Disabling Windows Defender via Group Policies"
     force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender"
-    Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableAntiSet-ItemPropertyyware" 1
+    Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableAntispyware" 1
     Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender" "DisableRoutinelyTakingAction" 1
     force-mkdir "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection"
     Set-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Policies\Microsoft\Windows Defender\Real-Time Protection" "DisableRealtimeMonitoring" 1
@@ -62,10 +64,10 @@ process {
     Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\Sense" "AutorunsDisabled" 3
 
     Write-Output "Removing Windows Defender context menu item"
-    si "HKLM:\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32" ""
+    Set-Item "HKLM:\SOFTWARE\Classes\CLSID\{09A47860-11B0-4DA5-AFA5-26D86198A780}\InprocServer32" ""
 
     Write-Output "Removing Windows Defender GUI / tray from autorun"
-    rp "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WindowsDefender" "WindowsDefender" -ea 0
+    Remove-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\WindowsDefender" "WindowsDefender" -ea 0
     }
 
 end {}
